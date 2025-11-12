@@ -1,0 +1,188 @@
+/*
+ * LoginActivity.java
+ *
+ * Author: Jeff Blagg
+ * Class: CS-360 - Mobile Architecture and Programming
+ * Professor: Jerome DiMarzio
+ * Date: October 2025
+ */
+
+package com.jeffblagg.eventtracker.ui;
+
+import com.jeffblagg.eventtracker.R;
+import com.jeffblagg.eventtracker.UserSessionManager;
+import com.jeffblagg.eventtracker.viewmodel.LoginViewModel;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+
+/**
+ * Activity to create a new account or login with an existing one.
+ */
+public class LoginActivity extends AppCompatActivity {
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+
+    private UserSessionManager sessionManager;
+    private LoginViewModel viewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_login);
+
+        // initialize session manager, view model, and views
+        sessionManager = new UserSessionManager(this);
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        findViews();
+        setupTextListeners();
+        setupLoginButton();
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    /**
+     * Handles the login process. Tries first to find the user in the database. If
+     * authentication fails, creates a new account.
+     */
+    private void handleLoginButtonClick() {
+        String username = usernameEditText.getText().toString().toLowerCase();
+        String password = passwordEditText.getText().toString();
+
+        viewModel.login(username, password, new LoginViewModel.LoginCallback() {
+            @Override
+            public void onSuccess(long userId) {
+                loginUser(userId);
+            }
+
+            @Override
+            public void onUserNotFound() {
+                createUser(username, password);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                showError(errorMessage);
+            }
+        });
+    }
+
+    /**
+     * Logs an existing user in and determines whether to show the notification
+     * permissions screen or proceed to the events screen.
+     *
+     * @param userId The id of the user to log in.
+     */
+    private void loginUser(long userId) {
+        sessionManager.setLoggedInUser(userId);
+
+        boolean smsPermissionGranted = sessionManager.smsPermissionGranted(this);
+        boolean userHasDecidedSMS = sessionManager.userHasDecidedSMS(userId);
+        Intent nextIntent;
+
+        // if the user has already made a decision surrounding notifications,
+        // take them straight to the Events activity
+        if (smsPermissionGranted || userHasDecidedSMS) {
+            nextIntent = new Intent(this, EventsActivity.class);
+        } else {
+            nextIntent = new Intent(this, NotificationPermissionActivity.class);
+        }
+
+        nextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(nextIntent);
+        finish();
+    }
+
+    /**
+     * Creates a new user, then proceeds with the login flow.
+     *
+     * @param username The username for the new user.
+     * @param password The password for the new user.
+     */
+    private void createUser(String username, String password) {
+        viewModel.createUser(username, password, new LoginViewModel.CreateUserCallback() {
+            @Override
+            public void onSuccess(long userId) {
+                loginUser(userId);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                showError(errorMessage);
+            }
+        });
+    };
+
+    /**
+     * Initializes the instance view instance variables by finding the views
+     * in the layout by id.
+     */
+    private void findViews() {
+        usernameEditText = findViewById(R.id.usernameEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        loginButton = findViewById(R.id.allowButton);
+    }
+
+    /**
+     * Adds text listeners to enable or disable the login button.
+     */
+    private void setupTextListeners() {
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Intentionally left blank
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Intentionally left blank
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+                loginButton.setEnabled(!username.isBlank() && !password.isBlank());
+            }
+        };
+
+        usernameEditText.addTextChangedListener(textWatcher);
+        passwordEditText.addTextChangedListener(textWatcher);
+    }
+
+    /**
+     * Initializes the login button and adds the text listener.
+     */
+    private void setupLoginButton() {
+        loginButton.setEnabled(false);
+        loginButton.setOnClickListener(v -> handleLoginButtonClick());
+    }
+
+    /**
+     * Displays a toast when an error is encountered.
+     * @param errorMessage The errorMessage to display.
+     */
+    private void showError(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+}

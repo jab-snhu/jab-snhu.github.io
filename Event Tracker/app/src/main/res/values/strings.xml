@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Event Tracker</string>
+    <string name="add_event">Add Event</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="description">Description</string>
+    <string name="pick_a_color">Pick a Color</string>
+    <string name="cancel">Cancel</string>
+    <string name="events">Events</string>
+    <string name="login_header">Login header</string>
+    <string name="login_title">Welcome to Event Tracker!</string>
+    <string name="login_subtitle">Please login or create an account to start tracking your events</string>
+    <string name="password">Password</string>
+    <string name="login_button_title">Create Account or Login</string>
+    <string name="allow_notifications">Allow SMS Notifications</string>
+    <string name="notifications_header">Notifications header</string>
+    <string name="skip">Skip</string>
+    <string name="notifications_subtitle">Get a simple SMS about 2 hours before your event.</string>
+    <string name="notifications_title">Never Miss a Thing</string>
+    <string name="mock_event_date">January 1, 2026 – 10:30 PM</string>
+    <string name="mock_event_title">Event Title</string>
+    <string name="delete_event">Delete event</string>
+    <string name="mock_event_description">Event description</string>
+    <string name="events_empty_state">No upcoming events.\n Tap the + button to add one!</string>
+    <string name="username">Username</string>
+    <string name="edit_event">Edit Event</string>
+    <string name="sign_out">Sign Out</string>
+</resources>
