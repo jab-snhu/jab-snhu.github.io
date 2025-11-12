@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "702108181807",
+    "project_id": "eventtracker-snhu",
+    "storage_bucket": "eventtracker-snhu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702108181807:android:133856a6c2f1175c526dda",
+        "android_client_info": {
+          "package_name": "com.jeffblagg.eventtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPZdM7lyme95pbIiVj5OrZCg0J3Ryeyg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
