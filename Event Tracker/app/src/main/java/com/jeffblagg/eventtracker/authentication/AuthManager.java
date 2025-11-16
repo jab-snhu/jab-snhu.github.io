@@ -1,3 +1,11 @@
+/*
+ * AuthManager.java
+ *
+ * Author: Jeff Blagg
+ * Class: CS-499 - CS Capstone
+ * Date: November 2025
+ */
+
 package com.jeffblagg.eventtracker.authentication;
 
 /**

@@ -17,6 +17,9 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
+import com.jeffblagg.eventtracker.authentication.AuthManager;
+import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,14 +31,14 @@ public class UserSessionManager {
     /** {@link SharedPreferences} file name for the app's stored data. */
     private static final String PREF_NAME = "event_tracker_prefs";
 
-    /** Storage key for the current user's id */
-    private static final String CURRENT_USER_ID_KEY = "current_user_id";
-
     /** Storage key for record of whether a user has made a decision about SMS permission */
     private static final String SMS_DECISIONS_MADE_KEY = "sms_decisions_made";
 
     /** {@link SharedPreferences} instance for local storage persistence needs */
     private final SharedPreferences prefs;
+
+    /** {@link AuthManager } instance to access current user id */
+    private final AuthManager authManager;
 
     /**
      * UserSessionManager constructor
@@ -44,42 +47,23 @@ public class UserSessionManager {
      */
     public UserSessionManager(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-    }
-
-    /**
-     * Saves the id of the current user.
-     *
-     * @param userId the id of the current user.
-     */
-    public void setLoggedInUser(long userId) {
-        prefs.edit()
-                .putLong(CURRENT_USER_ID_KEY, userId)
-                .apply();
+        authManager = new FirebaseAuthManager();
     }
 
     /**
      * Fetches the id of the current user.
      *
-     * @return The id ({@code long}) of the currently logged in user.
+     * @return The id of the currently logged in user.
      */
-    public long getUserId() {
-        return prefs.getLong(CURRENT_USER_ID_KEY, -1L);
+    public String getUserId() {
+        return authManager.getCurrentUserId();
     }
 
     /**
-     * Checks if a user is currently logged in.
-     *
-     * @return {@code true} if a user ID is stored, {@code false} otherwise.
-     */
-    public boolean isLoggedIn() {
-        return getUserId() != -1L;
-    }
-
-    /**
-     * Logs the current user out by removing the stored id in shared preferences.
+     * Logs the current user out.
      */
     public void logoutUser() {
-        prefs.edit().remove(CURRENT_USER_ID_KEY).apply();
+        authManager.signOut();
     }
 
     /**
@@ -92,14 +76,14 @@ public class UserSessionManager {
      *                             permission, {@code false} otherwise (though
      *                             that should not be recorded).
      */
-    public void setSMSDecisionMade(long userId, boolean decision) {
+    public void setSMSDecisionMade(String userId, boolean decision) {
         try {
             // get the existing set of saved user decisions
             String jsonString = prefs.getString(SMS_DECISIONS_MADE_KEY, "{}");
             JSONObject jsonObject = new JSONObject(jsonString);
 
             // add the decision for the current user and save
-            jsonObject.put(String.valueOf(userId), decision);
+            jsonObject.put(userId, decision);
             prefs.edit().putString(SMS_DECISIONS_MADE_KEY, jsonObject.toString()).apply();
         } catch (JSONException exception) {
             Log.d("UserSessionManager", "JSON Exception " + exception);
@@ -112,13 +96,13 @@ public class UserSessionManager {
      * @param userId The user id to check.
      * @return {@code true} if a decision exists for the user, {@code false} otherwise.
      */
-    public boolean userHasDecidedSMS(long userId) {
+    public boolean userHasDecidedSMS(String userId) {
         try {
             String jsonString = prefs.getString(SMS_DECISIONS_MADE_KEY, "{}");
             JSONObject jsonObject = new JSONObject(jsonString);
 
             // return the stored value, or false if no entry exists for the user
-            return jsonObject.optBoolean(String.valueOf(userId), false);
+            return jsonObject.optBoolean(userId, false);
         } catch (JSONException exception) {
             Log.d("UserSessionManager", "JSON Exception " + exception);
             return false;

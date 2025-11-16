@@ -264,10 +264,10 @@ public class AddEditEventActivity extends AppCompatActivity {
      */
     private void saveEvent() {
         UserSessionManager sessionManager = new UserSessionManager(this);
-        long userId = sessionManager.getUserId();
+        String userId = sessionManager.getUserId();
 
         // make sure there is a logged in user
-        if (userId == -1L) {
+        if (userId == null) {
             Toast.makeText(this, "No user is logged in.", Toast.LENGTH_SHORT).show();
             return;
         }

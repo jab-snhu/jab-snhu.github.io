@@ -94,7 +94,7 @@ public class EventRepository {
      * @param userId The id of the user whose events are fetched.
      * @return LiveData list of the specified user's future events.
      */
-    public LiveData<List<Event>> userEvents(long userId) {
+    public LiveData<List<Event>> userEvents(String userId) {
         return db.eventDao().getEventsForUser(userId);
     }
 

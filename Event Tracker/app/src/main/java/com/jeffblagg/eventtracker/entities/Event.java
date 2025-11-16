@@ -45,7 +45,7 @@ public class Event {
    /**
     * The id of the user associated with the event.
     */
-   public long userId;
+   public String userId;
 
    /**
     * The time of the event, stored in milliseconds.
@@ -77,7 +77,7 @@ public class Event {
     * @param description The description of the event.
     * @param cardColor The background color for the event's card.
     */
-   public Event(long userId, long eventTime,
+   public Event(String userId, long eventTime,
                 @NonNull String title, String description, Integer cardColor) {
       this.userId = userId;
       this.eventTime = eventTime;

@@ -119,7 +119,7 @@ public class NotificationPermissionActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQ) {
-            long userId = sessionManager.getUserId();
+            String userId = sessionManager.getUserId();
             // record that the user has made an SMS decision
             sessionManager.setSMSDecisionMade(userId, true);
         }

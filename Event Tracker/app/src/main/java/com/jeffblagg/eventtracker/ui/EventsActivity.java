@@ -142,23 +142,23 @@ public class EventsActivity extends AppCompatActivity {
      * Loads and observers the user's future events.
      */
     private void loadEvents() {
-        long userId = sessionManager.getUserId();
-
-        if (userId == -1L) {
-            Toast.makeText(this, "No user logged in.", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        EventRecyclerAdapter adapter = (EventRecyclerAdapter) eventsRecyclerView.getAdapter();
-        if (adapter != null) {
-            viewModel.userEvents(userId).observe(this, events -> {
-                adapter.submit(events);
-                emptyStateTextView.setVisibility(
-                        (events == null || events.isEmpty())
-                                ? View.VISIBLE
-                                : View.GONE);
-            });
-        }
+//        String userId = sessionManager.getUserId();
+//
+//        if (userId == null) {
+//            Toast.makeText(this, "No user logged in.", Toast.LENGTH_SHORT).show();
+//            finish();
+//            return;
+//        }
+//
+//        EventRecyclerAdapter adapter = (EventRecyclerAdapter) eventsRecyclerView.getAdapter();
+//        if (adapter != null) {
+//            viewModel.userEvents(userId).observe(this, events -> {
+//                adapter.submit(events);
+//                emptyStateTextView.setVisibility(
+//                        (events == null || events.isEmpty())
+//                                ? View.VISIBLE
+//                                : View.GONE);
+//            });
+//        }
     }
 }

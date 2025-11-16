@@ -54,7 +54,7 @@ public interface EventDao {
      * @return A {@link LiveData} list of event objects for the specified user.
      */
     @Query("SELECT * FROM events WHERE userId = :userId AND eventTime >= strftime('%s', 'now') * 1000 ORDER BY eventTime ASC")
-    LiveData<List<Event>> getEventsForUser(long userId);
+    LiveData<List<Event>> getEventsForUser(String userId);
 
     /**
      * Fetches a specific event by id.

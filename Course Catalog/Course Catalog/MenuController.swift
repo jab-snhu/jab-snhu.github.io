@@ -1,9 +1,14 @@
-// 
+// MenuConroller.swift
+//
+// Author: Jeff Blagg
+// Class: CS-499 - CS Capstone
+// Date: November 2025
 
 import Foundation
 
+/// Presents the menu and handles user menu selections
 public struct MenuController {
-    let catalogManager: CatalogManager
+    private let catalogManager: CatalogManager
     
     init(catalogManager: CatalogManager = .init()) {
         self.catalogManager = catalogManager

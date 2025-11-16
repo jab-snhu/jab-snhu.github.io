@@ -9,8 +9,8 @@
 
 package com.jeffblagg.eventtracker.viewmodel;
 
-import com.jeffblagg.eventtracker.entities.User;
-import com.jeffblagg.eventtracker.repo.UserRepository;
+import com.jeffblagg.eventtracker.authentication.AuthManager;
+import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
 
 import android.app.Application;
 
@@ -18,12 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 /**
- * The view model for the LoginActivity. Connects to the
- * {@link UserRepository} to verify an existing user or create a
- * new one.
+ * The view model for the LoginActivity. Contains an authentication
+ * manager to handle auth operations.
  */
 public class LoginViewModel extends AndroidViewModel {
-    private final UserRepository userRepo;
+    private final AuthManager authManager;
 
     /**
      * LoginViewModel constructor. Initializes the user repository.
@@ -32,7 +31,7 @@ public class LoginViewModel extends AndroidViewModel {
      */
     public LoginViewModel(@NonNull Application application) {
         super(application);
-        userRepo = new UserRepository(application);
+        authManager = new FirebaseAuthManager();
     }
 
     /**
@@ -40,7 +39,7 @@ public class LoginViewModel extends AndroidViewModel {
      * successful login, user not found, and encountered errors.
      */
     public interface LoginCallback {
-        void onSuccess(long userId);
+        void onSuccess(String userId);
         void onUserNotFound();
         void onError(String errorMessage);
     }
@@ -50,54 +49,54 @@ public class LoginViewModel extends AndroidViewModel {
      * for successful user creation and an encountered error.
      */
     public interface CreateUserCallback {
-        void onSuccess(long userId);
+        void onSuccess(String userId);
         void onError(String errorMessage);
     }
 
     /**
-     * Attempts to find a matching user in the database, matching against
-     * username and password.
+     * Attempts to log the user in with the provided email and password.
      *
-     * @param username The username for the user.
+     * @param email The email for the user.
      * @param password The password for the user.
      * @param callback The callback triggered with the result from fetching the user.
      */
-    public void login(@NonNull String username, @NonNull String password, LoginCallback callback) {
-        // convert username to lowercase before fetching
-        final String lowercaseUsername = username.toLowerCase();
+    public void login(@NonNull String email, @NonNull String password, LoginCallback callback) {
+        authManager.signIn(email, password, new AuthManager.AuthCallback() {
+            @Override
+            public void onSuccess(String userId) {
+                callback.onSuccess(userId);
+            }
 
-        userRepo.getUser(lowercaseUsername, user -> {
-            if (user == null) {
-                callback.onUserNotFound();
-            } else if (password.equals(user.password)) {
-                callback.onSuccess(user.id);
-            } else {
-                callback.onError("Invalid password.");
+            @Override
+            public void onFailure(AuthManager.AuthError error) {
+                if (error == AuthManager.AuthError.USER_NOT_FOUND) {
+                    callback.onUserNotFound();
+                } else {
+                    callback.onError(error.message);
+                }
             }
         });
     }
 
     /**
-     * Creates a new user using the provided username and password. Usernames
-     * are converted to lowercase to avoid case sensitivity.
+     * Creates a new user using the provided email and password.
      *
-     * @param username The username for the user.
+     * @param email The email for the user.
      * @param password The password for the user.
      * @param callback The callback triggered after attempting to create a new user.
      */
-    public void createUser(@NonNull String username,
+    public void createUser(@NonNull String email,
                            @NonNull String password,
                            CreateUserCallback callback) {
-        // use a lowercase username to avoid case sensitivity
-        final String lowercaseUsername = username.toLowerCase();
+        authManager.createAccount(email, password, new AuthManager.AuthCallback() {
+            @Override
+            public void onSuccess(String userId) {
+                callback.onSuccess(userId);
+            }
 
-        User newUser = new User(lowercaseUsername, password);
-
-        userRepo.addUser(newUser, newUserId -> {
-            if (newUserId > 0) {
-                callback.onSuccess(newUserId);
-            } else {
-                callback.onError("Failed to create user.");
+            @Override
+            public void onFailure(AuthManager.AuthError error) {
+                callback.onError(error.message);
             }
         });
     }

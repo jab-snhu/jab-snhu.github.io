@@ -1,4 +1,8 @@
-// 
+// Strings.swift
+//
+// Author: Jeff Blagg
+// Class: CS-499 - CS Capstone
+// Date: November 2025
 
 enum Strings {
     static let welcomeMessage = "Welcome to the course catalog!"

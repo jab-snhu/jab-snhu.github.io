@@ -1,3 +1,11 @@
+/*
+ * FirebaseAuthManager.java
+ *
+ * Author: Jeff Blagg
+ * Class: CS-499 - CS Capstone
+ * Date: November 2025
+ */
+
 package com.jeffblagg.eventtracker.authentication;
 
 import com.google.firebase.auth.*;
@@ -34,6 +42,8 @@ public class FirebaseAuthManager implements AuthManager {
                         if (user != null) {
                             callback.onSuccess(user.getUid());
                         } else {
+                            // This should never happen, but in case sign in is
+                            // successful but the user is null, send an error
                             callback.onFailure(AuthError.OTHER);
                         }
                     } else {
@@ -52,6 +62,8 @@ public class FirebaseAuthManager implements AuthManager {
                         if (user != null) {
                             callback.onSuccess(user.getUid());
                         } else {
+                            // This should never happen, but in case account creation
+                            // is successful but the user is null, send an error
                             callback.onFailure(AuthError.OTHER);
                         }
                     } else {

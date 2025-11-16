@@ -71,7 +71,7 @@ public class AddEditEventViewModel extends AndroidViewModel {
     * @param callback The callback triggered on successful save.
     * @param errorCallback The callback triggered if an error is encountered.
     */
-   public void createNewEvent(long userId,
+   public void createNewEvent(String userId,
                               String title,
                               String description,
                               long eventTime,

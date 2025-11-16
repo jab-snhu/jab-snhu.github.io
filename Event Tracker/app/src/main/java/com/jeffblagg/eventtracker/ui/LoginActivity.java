@@ -32,7 +32,7 @@ import androidx.lifecycle.ViewModelProvider;
  * Activity to create a new account or login with an existing one.
  */
 public class LoginActivity extends AppCompatActivity {
-    private EditText usernameEditText;
+    private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
 
@@ -65,18 +65,18 @@ public class LoginActivity extends AppCompatActivity {
      * authentication fails, creates a new account.
      */
     private void handleLoginButtonClick() {
-        String username = usernameEditText.getText().toString().toLowerCase();
+        String email = emailEditText.getText().toString().toLowerCase();
         String password = passwordEditText.getText().toString();
 
-        viewModel.login(username, password, new LoginViewModel.LoginCallback() {
+        viewModel.login(email, password, new LoginViewModel.LoginCallback() {
             @Override
-            public void onSuccess(long userId) {
+            public void onSuccess(String userId) {
                 loginUser(userId);
             }
 
             @Override
             public void onUserNotFound() {
-                createUser(username, password);
+                createUser(email, password);
             }
 
             @Override
@@ -92,9 +92,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @param userId The id of the user to log in.
      */
-    private void loginUser(long userId) {
-        sessionManager.setLoggedInUser(userId);
-
+    private void loginUser(String userId) {
         boolean smsPermissionGranted = sessionManager.smsPermissionGranted(this);
         boolean userHasDecidedSMS = sessionManager.userHasDecidedSMS(userId);
         Intent nextIntent;
@@ -115,13 +113,13 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Creates a new user, then proceeds with the login flow.
      *
-     * @param username The username for the new user.
+     * @param email The email for the new user.
      * @param password The password for the new user.
      */
-    private void createUser(String username, String password) {
-        viewModel.createUser(username, password, new LoginViewModel.CreateUserCallback() {
+    private void createUser(String email, String password) {
+        viewModel.createUser(email, password, new LoginViewModel.CreateUserCallback() {
             @Override
-            public void onSuccess(long userId) {
+            public void onSuccess(String userId) {
                 loginUser(userId);
             }
 
@@ -137,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
      * in the layout by id.
      */
     private void findViews() {
-        usernameEditText = findViewById(R.id.usernameEditText);
+        emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.allowButton);
     }
@@ -159,14 +157,14 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String username = usernameEditText.getText().toString();
+                String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                loginButton.setEnabled(!username.isBlank() && !password.isBlank());
+                loginButton.setEnabled(!email.isBlank() && !password.isBlank());
             }
         };
 
-        usernameEditText.addTextChangedListener(textWatcher);
+        emailEditText.addTextChangedListener(textWatcher);
         passwordEditText.addTextChangedListener(textWatcher);
     }
 

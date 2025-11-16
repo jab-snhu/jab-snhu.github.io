@@ -49,7 +49,7 @@ public class EventsViewModel extends AndroidViewModel {
     * @param userId The id for the user whose events should be fetched.
     * @return LiveData list of the specified user's future events.
     */
-   public LiveData<List<Event>> userEvents(long userId) {
+   public LiveData<List<Event>> userEvents(String userId) {
       return repo.userEvents(userId);
    }
 

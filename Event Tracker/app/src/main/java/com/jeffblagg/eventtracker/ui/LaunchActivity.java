@@ -28,7 +28,7 @@ public class LaunchActivity extends AppCompatActivity {
 
       // check login status and determine correct activity
       UserSessionManager sessionManager = new UserSessionManager(this);
-      Intent firstActivity = sessionManager.isLoggedIn()
+      Intent firstActivity = (sessionManager.getUserId() != null)
               ? new Intent(this, EventsActivity.class)
               : new Intent(this, LoginActivity.class);
 
