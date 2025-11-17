@@ -13,17 +13,11 @@ import Foundation
 ///
 /// - Note: The first field is treated as the course number, the second as the course
 /// title, and any remaining are treated as prereq courses. Empty lines are ignored.
-public struct CatalogCSVParser {
+public struct CatalogCSVParser: CatalogParsing {
     
     /// Creates a new CatalogCSVParser instance.
     public init() { }
     
-    /// Parses a CSV file with the provided name into an array of `Course` objects.
-    ///
-    /// - Important: The file must exist in the same directory as the program executable.
-    /// - Parameter fileName: The name of the CSV file to parse
-    /// - Returns: An array of parsed `Course` objects
-    /// - Throws: A `ParsingError` if the file is not found, cannot be read, or contains a malformed line
     public func parse(_ fileName: String) throws -> [Course] {
         
         // get the correct fileURL, file must be in the same directory as the executable
@@ -79,12 +73,13 @@ public struct CatalogCSVParser {
 }
 
 // MARK: - ParsingError
+
 extension CatalogCSVParser {
     
     /// Possible errors that can occur while parsing a course catalog CSV file.
     ///  
     /// Contains errors for the following cases: fileNotFound, unreadable, and malformedCourse.
-    public enum ParsingError: Error, CustomStringConvertible {
+    fileprivate enum ParsingError: Error, CustomStringConvertible {
         
         /// The CSV file could not be found
         case fileNotFound(String)
@@ -97,7 +92,7 @@ extension CatalogCSVParser {
         
         
         /// A description of the parsing error
-        public var description: String {
+        fileprivate var description: String {
             switch self {
             case .fileNotFound(let path):
                 return "\(Strings.CatalogParser.fileNotFound): \(path)"
