@@ -30,12 +30,12 @@ public final class EventReminderManager {
     * @param flags Flags for the PendingIntent
     * @return The configured PendingIntent for the scheduled event.
     */
-   private static PendingIntent buildPendingIntent(Context context, long eventId, String message, int flags) {
+   private static PendingIntent buildPendingIntent(Context context, String eventId, String message, int flags) {
       Intent intent = new Intent(context, EventReminderReceiver.class);
       // hard code the phone number to "5554" to only send to the emulator
       intent.putExtra(EventReminderReceiver.PHONE_NUMBER, "5554");
       intent.putExtra(EventReminderReceiver.SMS_MESSAGE, message);
-      return PendingIntent.getBroadcast(context, (int) eventId, intent, flags);
+      return PendingIntent.getBroadcast(context, eventId.hashCode(), intent, flags);
    }
 
    /**
@@ -48,7 +48,7 @@ public final class EventReminderManager {
     * @param reminderTime The time for the reminder to be sent, in milliseconds.
     * @param message The message used as the SMS body
     */
-   public static void schedule(Context context, long eventId, long reminderTime, String message) {
+   public static void schedule(Context context, String eventId, long reminderTime, String message) {
       SMSPermissionManager smsPermissionManager = new SMSPermissionManager(context);
 
       // block scheduling if reminder time is in the past or permission hasn't been granted
@@ -74,7 +74,7 @@ public final class EventReminderManager {
     * @param context The context for scheduled events.
     * @param eventId The id of the event used to lookup any existing reminders.
     */
-   public static void cancel(Context context, long eventId) {
+   public static void cancel(Context context, String eventId) {
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       PendingIntent pendingIntent = buildPendingIntent(
               context,

@@ -36,7 +36,7 @@ public class AddEditEventViewModel extends AndroidViewModel {
    /**
     * Interface for a callback after an event has been saved.
     */
-   public interface SaveEventCallback { void onEventSaved(long id); }
+   public interface SaveEventCallback { void onEventSaved(String id); }
 
    /**
     * Interface for a callback when encountering an error with an operation.
@@ -60,7 +60,7 @@ public class AddEditEventViewModel extends AndroidViewModel {
     * @param eventId The id of the event to fetch.
     * @param callback The callback returning the fetched event.
     */
-   public void loadEvent(long eventId, LoadEventCallback callback) {
+   public void loadEvent(String eventId, LoadEventCallback callback) {
       repo.getEvent(eventId, callback::onEventLoaded);
    }
 
@@ -92,7 +92,9 @@ public class AddEditEventViewModel extends AndroidViewModel {
          return;
       }
 
-      Event event = new Event(userId, eventTime, title, description, cardColor);
+      // uses `null` for the event id because Firestore will provide an id
+      // when adding the event
+      Event event = new Event(null, userId, eventTime, title, description, cardColor);
       repo.add(event, callback::onEventSaved);
    }
 

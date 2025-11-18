@@ -63,8 +63,8 @@ public class EventsViewModel extends AndroidViewModel {
     * @param eventId The id of the event to be deleted.
     * @param callback Callback triggered after the event has been deleted.
     */
-   public void deleteEvent(long eventId, @NonNull DeleteCallback callback) {
-      repo.delete(eventId, rows -> callback.onDelete());
+   public void deleteEvent(String eventId, @NonNull DeleteCallback callback) {
+      repo.delete(eventId, callback::onDelete);
    }
 
    /**

@@ -61,8 +61,8 @@ public class AddEditEventActivity extends AppCompatActivity {
 
     private AddEditEventViewModel viewModel;
 
-    // use default value of -1L for a new event
-    private long eventId = -1L;
+    // use null for a new event. Firestore will autogenerate an id.
+    private String eventId = null;
 
     private Toolbar toolbar;
     private ConstraintLayout eventCardLayout;
@@ -89,7 +89,7 @@ public class AddEditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit_event);
 
         viewModel = new ViewModelProvider(this).get(AddEditEventViewModel.class);
-        eventId = getIntent().getLongExtra(EDIT_EVENT_ID, -1L);
+        eventId = getIntent().getStringExtra(EDIT_EVENT_ID);
 
         // activity initializations
         findViews();
@@ -107,7 +107,7 @@ public class AddEditEventActivity extends AppCompatActivity {
 
         // if an event id is provided load it, otherwise update UI
         // to add a new event
-        if (eventId > 0) {
+        if (eventId != null) {
             viewModel.loadEvent(eventId, this::populateEventInfo);
             addEditButton.setText(R.string.edit_event);
         } else {
@@ -170,7 +170,7 @@ public class AddEditEventActivity extends AppCompatActivity {
      */
     private void setupToolbar() {
         if (getSupportActionBar() != null) {
-            String title = eventId > 0 ? "Edit Event" : "Add Event";
+            String title = eventId == null ? "Add Event" : "Edit Event";
             getSupportActionBar().setTitle(title);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -280,7 +280,7 @@ public class AddEditEventActivity extends AppCompatActivity {
         }
 
         // if an eventId exists, edit the existing event, otherwise add a new event
-        if (eventId > 0) {
+        if (eventId != null) {
             viewModel.loadEvent(eventId, event -> {
                 if (event == null) {
                     Toast.makeText(this, "Event not found.", Toast.LENGTH_SHORT).show();
@@ -300,7 +300,7 @@ public class AddEditEventActivity extends AppCompatActivity {
             });
         } else {
             viewModel.createNewEvent(title, description, eventTime, selectedColor, id -> {
-                if (id > 0) {
+                if (id != null) {
                     Toast.makeText(this, "Event added.", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();

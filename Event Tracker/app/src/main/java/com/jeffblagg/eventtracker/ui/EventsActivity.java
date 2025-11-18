@@ -10,13 +10,13 @@
 package com.jeffblagg.eventtracker.ui;
 
 import com.jeffblagg.eventtracker.R;
-import com.jeffblagg.eventtracker.reminder.SMSPermissionManager;
 import com.jeffblagg.eventtracker.viewmodel.EventsViewModel;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,26 +136,26 @@ public class EventsActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads and observers the user's future events.
+     * Loads and observes the user's future events.
      */
     private void loadEvents() {
-//        String userId = sessionManager.getUserId();
-//
-//        if (userId == null) {
-//            Toast.makeText(this, "No user logged in.", Toast.LENGTH_SHORT).show();
-//            finish();
-//            return;
-//        }
-//
-//        EventRecyclerAdapter adapter = (EventRecyclerAdapter) eventsRecyclerView.getAdapter();
-//        if (adapter != null) {
-//            viewModel.userEvents(userId).observe(this, events -> {
-//                adapter.submit(events);
-//                emptyStateTextView.setVisibility(
-//                        (events == null || events.isEmpty())
-//                                ? View.VISIBLE
-//                                : View.GONE);
-//            });
-//        }
+        String userId = viewModel.getCurrentUserId();
+
+        if (userId == null) {
+            Toast.makeText(this, "No user logged in.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        EventRecyclerAdapter adapter = (EventRecyclerAdapter) eventsRecyclerView.getAdapter();
+        if (adapter != null) {
+            viewModel.userEvents(userId).observe(this, events -> {
+                adapter.submit(events);
+                emptyStateTextView.setVisibility(
+                        (events == null || events.isEmpty())
+                                ? View.VISIBLE
+                                : View.GONE);
+            });
+        }
     }
 }
