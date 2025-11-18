@@ -9,7 +9,8 @@
 
 package com.jeffblagg.eventtracker.ui;
 
-import com.jeffblagg.eventtracker.UserSessionManager;
+import com.jeffblagg.eventtracker.authentication.AuthManager;
+import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,8 +28,8 @@ public class LaunchActivity extends AppCompatActivity {
       super.onCreate(savedInstanceState);
 
       // check login status and determine correct activity
-      UserSessionManager sessionManager = new UserSessionManager(this);
-      Intent firstActivity = (sessionManager.getUserId() != null)
+      AuthManager authManager = new FirebaseAuthManager();
+      Intent firstActivity = (authManager.getCurrentUserId() != null)
               ? new Intent(this, EventsActivity.class)
               : new Intent(this, LoginActivity.class);
 

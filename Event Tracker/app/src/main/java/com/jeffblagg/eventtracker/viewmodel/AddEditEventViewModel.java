@@ -9,6 +9,8 @@
 
 package com.jeffblagg.eventtracker.viewmodel;
 
+import com.jeffblagg.eventtracker.authentication.AuthManager;
+import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
 import com.jeffblagg.eventtracker.entities.Event;
 import com.jeffblagg.eventtracker.repo.EventRepository;
 
@@ -24,6 +26,7 @@ import androidx.lifecycle.AndroidViewModel;
  */
 public class AddEditEventViewModel extends AndroidViewModel {
    private final EventRepository repo;
+   private final AuthManager authManager;
 
    /**
     * Interface for a callback after an event has been loaded.
@@ -48,6 +51,7 @@ public class AddEditEventViewModel extends AndroidViewModel {
    public AddEditEventViewModel(@NonNull Application application) {
       super(application);
       repo = new EventRepository(application);
+      authManager = new FirebaseAuthManager();
    }
 
    /**
@@ -63,7 +67,6 @@ public class AddEditEventViewModel extends AndroidViewModel {
    /**
     * Creates a new event for the specified user.
     *
-    * @param userId The id for the user associated with the event.
     * @param title The title of the event.
     * @param description The description of the event.
     * @param eventTime The time of the event, in milliseconds.
@@ -71,13 +74,19 @@ public class AddEditEventViewModel extends AndroidViewModel {
     * @param callback The callback triggered on successful save.
     * @param errorCallback The callback triggered if an error is encountered.
     */
-   public void createNewEvent(String userId,
-                              String title,
+   public void createNewEvent(String title,
                               String description,
                               long eventTime,
                               Integer cardColor,
                               SaveEventCallback callback,
                               ErrorCallback errorCallback) {
+      String userId = authManager.getCurrentUserId();
+
+      if (userId == null) {
+          errorCallback.onError("No user is logged in.");
+          return;
+      }
+
       if (title.isBlank()) {
          errorCallback.onError("Title is required.");
          return;

@@ -10,14 +10,13 @@
 package com.jeffblagg.eventtracker.ui;
 
 import com.jeffblagg.eventtracker.R;
-import com.jeffblagg.eventtracker.UserSessionManager;
+import com.jeffblagg.eventtracker.reminder.SMSPermissionManager;
 import com.jeffblagg.eventtracker.viewmodel.EventsViewModel;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +43,6 @@ public class EventsActivity extends AppCompatActivity {
     private TextView emptyStateTextView;
 
     private EventsViewModel viewModel;
-    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +50,8 @@ public class EventsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_events);
 
-        // initialize view model, sessionManager, and views
+        // initialize view model and views
         viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
-        sessionManager = new UserSessionManager(this);
         findViews();
         setSupportActionBar(eventsToolbar);
         setupRecyclerView();
@@ -100,7 +97,7 @@ public class EventsActivity extends AppCompatActivity {
      * Logs the user out and returns to the LoginActivity as the root activity.
      */
     private void handleSignOut() {
-        sessionManager.logoutUser();
+        viewModel.signOut();
 
         Intent loginIntent = new Intent(this, LoginActivity.class);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

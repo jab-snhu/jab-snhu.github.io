@@ -11,6 +11,7 @@ package com.jeffblagg.eventtracker.viewmodel;
 
 import com.jeffblagg.eventtracker.authentication.AuthManager;
 import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
+import com.jeffblagg.eventtracker.reminder.SMSPermissionManager;
 
 import android.app.Application;
 
@@ -23,6 +24,7 @@ import androidx.lifecycle.AndroidViewModel;
  */
 public class LoginViewModel extends AndroidViewModel {
     private final AuthManager authManager;
+    private final SMSPermissionManager smsPermissionManager;
 
     /**
      * LoginViewModel constructor. Initializes the user repository.
@@ -32,6 +34,7 @@ public class LoginViewModel extends AndroidViewModel {
     public LoginViewModel(@NonNull Application application) {
         super(application);
         authManager = new FirebaseAuthManager();
+        smsPermissionManager = new SMSPermissionManager(application);
     }
 
     /**
@@ -99,5 +102,30 @@ public class LoginViewModel extends AndroidViewModel {
                 callback.onError(error.message);
             }
         });
+    }
+
+    /**
+     * Checks if SMS permission ha been granted.
+     *
+     * @return true if SMS permission has been granted, false if not.
+     */
+    public boolean smsPermissionGranted() {
+        return smsPermissionManager.smsPermissionGranted(getApplication());
+    }
+
+    /**
+     * Checks if the current user has previously made a decision about SMS
+     * permissions.
+     *
+     * @return true if the user has made a decision, false if not.
+     */
+    public boolean userHasDecidedSMS() {
+        String userId = authManager.getCurrentUserId();
+
+        if (userId == null) {
+            return false;
+        }
+
+        return smsPermissionManager.userHasDecidedSMS(userId);
     }
 }

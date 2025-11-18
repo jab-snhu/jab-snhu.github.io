@@ -11,24 +11,22 @@ package com.jeffblagg.eventtracker.ui;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jeffblagg.eventtracker.R;
-import com.jeffblagg.eventtracker.UserSessionManager;
-import com.jeffblagg.eventtracker.reminder.EventReminderManager;
+import com.jeffblagg.eventtracker.reminder.SMSPermissionManager;
+import com.jeffblagg.eventtracker.viewmodel.NotificationPermissionViewModel;
 
 /**
  * Activity to prepare users for the SMS permission request.
@@ -38,8 +36,7 @@ public class NotificationPermissionActivity extends AppCompatActivity {
     private static final int PERMISSION_REQ = 67;
     private Button allowButton;
     private Button skipButton;
-
-    private UserSessionManager sessionManager;
+    private NotificationPermissionViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +44,8 @@ public class NotificationPermissionActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_notification_permission);
 
-        // initialize session manager and setup views
-        sessionManager = new UserSessionManager(this);
+        // initialize view model and setup views
+        viewModel = new ViewModelProvider(this).get(NotificationPermissionViewModel.class);
         findViews();
 
         // add button listeners
@@ -92,7 +89,7 @@ public class NotificationPermissionActivity extends AppCompatActivity {
      * navigates directly to the events activity.
      */
     private void requestSMSPermission() {
-        if (sessionManager.smsPermissionGranted(this)) {
+        if (viewModel.smsPermissionGranted()) {
             Toast.makeText(this, "SMS permission granted.", Toast.LENGTH_SHORT).show();
             navigateToEventsActivity();
             return;
@@ -119,9 +116,8 @@ public class NotificationPermissionActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQ) {
-            String userId = sessionManager.getUserId();
             // record that the user has made an SMS decision
-            sessionManager.setSMSDecisionMade(userId, true);
+            viewModel.recordSMSDecision();
         }
 
         // navigate to events regardless of the decision

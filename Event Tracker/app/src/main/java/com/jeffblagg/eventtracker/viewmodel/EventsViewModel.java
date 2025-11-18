@@ -9,6 +9,8 @@
 
 package com.jeffblagg.eventtracker.viewmodel;
 
+import com.jeffblagg.eventtracker.authentication.AuthManager;
+import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
 import com.jeffblagg.eventtracker.entities.Event;
 import com.jeffblagg.eventtracker.repo.EventRepository;
 
@@ -27,6 +29,7 @@ import java.util.List;
  */
 public class EventsViewModel extends AndroidViewModel {
    private final EventRepository repo;
+   private final AuthManager authManager;
 
    /**
     * Interface for a callback after and event has been deleted.
@@ -41,6 +44,7 @@ public class EventsViewModel extends AndroidViewModel {
    public EventsViewModel(@NonNull Application application) {
       super(application);
       repo = new EventRepository(application);
+      authManager = new FirebaseAuthManager();
    }
 
    /**
@@ -61,5 +65,21 @@ public class EventsViewModel extends AndroidViewModel {
     */
    public void deleteEvent(long eventId, @NonNull DeleteCallback callback) {
       repo.delete(eventId, rows -> callback.onDelete());
+   }
+
+   /**
+    * Gets the id for the current user.
+    *
+    * @return the user id, or null if not logged in.
+    */
+   public String getCurrentUserId() {
+       return authManager.getCurrentUserId();
+   }
+
+    /**
+     * Signs the current user out.
+     */
+   public void signOut() {
+       authManager.signOut();
    }
 }

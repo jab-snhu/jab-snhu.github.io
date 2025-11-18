@@ -1,5 +1,5 @@
 /*
- * UserSessionManager.java
+ * SMSPermissionManager.java
  *
  * Author: Jeff Blagg
  * Class: CS-360 - Mobile Architecture and Programming
@@ -7,7 +7,7 @@
  * Date: October 2025
  */
 
-package com.jeffblagg.eventtracker;
+package com.jeffblagg.eventtracker.reminder;
 
 import android.Manifest;
 import android.content.Context;
@@ -17,17 +17,14 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.jeffblagg.eventtracker.authentication.AuthManager;
-import com.jeffblagg.eventtracker.authentication.FirebaseAuthManager;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Manages user session and SMS notification preferences for the app
+ * Manages SMS notification preferences for the app.
  * Data is stored locally in {@link SharedPreferences}.
  */
-public class UserSessionManager {
+public class SMSPermissionManager {
     /** {@link SharedPreferences} file name for the app's stored data. */
     private static final String PREF_NAME = "event_tracker_prefs";
 
@@ -37,33 +34,13 @@ public class UserSessionManager {
     /** {@link SharedPreferences} instance for local storage persistence needs */
     private final SharedPreferences prefs;
 
-    /** {@link AuthManager } instance to access current user id */
-    private final AuthManager authManager;
-
     /**
-     * UserSessionManager constructor
+     * SMSPermissionManager constructor
      *
      * @param context Context used to access shared preferences.
      */
-    public UserSessionManager(Context context) {
+    public SMSPermissionManager(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        authManager = new FirebaseAuthManager();
-    }
-
-    /**
-     * Fetches the id of the current user.
-     *
-     * @return The id of the currently logged in user.
-     */
-    public String getUserId() {
-        return authManager.getCurrentUserId();
-    }
-
-    /**
-     * Logs the current user out.
-     */
-    public void logoutUser() {
-        authManager.signOut();
     }
 
     /**
@@ -86,7 +63,7 @@ public class UserSessionManager {
             jsonObject.put(userId, decision);
             prefs.edit().putString(SMS_DECISIONS_MADE_KEY, jsonObject.toString()).apply();
         } catch (JSONException exception) {
-            Log.d("UserSessionManager", "JSON Exception " + exception);
+            Log.d("SMSPermissionManager", "JSON Exception " + exception);
         }
     }
 
@@ -104,7 +81,7 @@ public class UserSessionManager {
             // return the stored value, or false if no entry exists for the user
             return jsonObject.optBoolean(userId, false);
         } catch (JSONException exception) {
-            Log.d("UserSessionManager", "JSON Exception " + exception);
+            Log.d("SMSPermissionManager", "JSON Exception " + exception);
             return false;
         }
     }

@@ -31,7 +31,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jeffblagg.eventtracker.R;
-import com.jeffblagg.eventtracker.UserSessionManager;
+import com.jeffblagg.eventtracker.reminder.SMSPermissionManager;
 import com.jeffblagg.eventtracker.entities.Event;
 import com.jeffblagg.eventtracker.viewmodel.AddEditEventViewModel;
 
@@ -263,15 +263,6 @@ public class AddEditEventActivity extends AppCompatActivity {
      * Validates input and either creates a new event or updates an existing one (if provided).
      */
     private void saveEvent() {
-        UserSessionManager sessionManager = new UserSessionManager(this);
-        String userId = sessionManager.getUserId();
-
-        // make sure there is a logged in user
-        if (userId == null) {
-            Toast.makeText(this, "No user is logged in.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         String title = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         long eventTime = calendar.getTimeInMillis();
@@ -308,7 +299,7 @@ public class AddEditEventActivity extends AppCompatActivity {
                 });
             });
         } else {
-            viewModel.createNewEvent(userId, title, description, eventTime, selectedColor, id -> {
+            viewModel.createNewEvent(title, description, eventTime, selectedColor, id -> {
                 if (id > 0) {
                     Toast.makeText(this, "Event added.", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);

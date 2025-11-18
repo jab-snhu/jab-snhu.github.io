@@ -9,8 +9,6 @@
 
 package com.jeffblagg.eventtracker.reminder;
 
-import com.jeffblagg.eventtracker.UserSessionManager;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -51,10 +49,10 @@ public final class EventReminderManager {
     * @param message The message used as the SMS body
     */
    public static void schedule(Context context, long eventId, long reminderTime, String message) {
-      UserSessionManager sessionManager = new UserSessionManager(context);
+      SMSPermissionManager smsPermissionManager = new SMSPermissionManager(context);
 
       // block scheduling if reminder time is in the past or permission hasn't been granted
-      if (reminderTime <= System.currentTimeMillis() || !sessionManager.smsPermissionGranted(context)) {
+      if (reminderTime <= System.currentTimeMillis() || !smsPermissionManager.smsPermissionGranted(context)) {
          return;
       }
 

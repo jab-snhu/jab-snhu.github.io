@@ -10,7 +10,6 @@
 package com.jeffblagg.eventtracker.ui;
 
 import com.jeffblagg.eventtracker.R;
-import com.jeffblagg.eventtracker.UserSessionManager;
 import com.jeffblagg.eventtracker.viewmodel.LoginViewModel;
 
 import android.content.Intent;
@@ -36,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private Button loginButton;
 
-    private UserSessionManager sessionManager;
     private LoginViewModel viewModel;
 
     @Override
@@ -45,8 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // initialize session manager, view model, and views
-        sessionManager = new UserSessionManager(this);
+        // initialize view model, and views
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         findViews();
@@ -71,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         viewModel.login(email, password, new LoginViewModel.LoginCallback() {
             @Override
             public void onSuccess(String userId) {
-                loginUser(userId);
+                handleSuccessfulLogin();
             }
 
             @Override
@@ -87,14 +84,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Logs an existing user in and determines whether to show the notification
-     * permissions screen or proceed to the events screen.
-     *
-     * @param userId The id of the user to log in.
+     * Routes a newly logged in user to the appropriate screen.
+     * If the user has already granted SMS permissions or has already
+     * made a decision regarding SMS permissions, they are routed directly
+     * to the {@link EventsActivity}. Otherwise, they are routed to the
+     * {@link NotificationPermissionActivity}.
      */
-    private void loginUser(String userId) {
-        boolean smsPermissionGranted = sessionManager.smsPermissionGranted(this);
-        boolean userHasDecidedSMS = sessionManager.userHasDecidedSMS(userId);
+    private void handleSuccessfulLogin() {
+        boolean smsPermissionGranted = viewModel.smsPermissionGranted();
+        boolean userHasDecidedSMS = viewModel.userHasDecidedSMS();
         Intent nextIntent;
 
         // if the user has already made a decision surrounding notifications,
@@ -120,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         viewModel.createUser(email, password, new LoginViewModel.CreateUserCallback() {
             @Override
             public void onSuccess(String userId) {
-                loginUser(userId);
+                handleSuccessfulLogin();
             }
 
             @Override
