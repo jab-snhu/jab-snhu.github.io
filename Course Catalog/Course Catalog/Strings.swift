@@ -22,6 +22,15 @@ extension Strings {
         static let exit = "Exit"
         static let selectOption = "Select an option: "
         static let invalidOption = "Invalid option. Please try again."
+        static let numberOfCoursesLoaded = "Number of courses loaded:"
+        static let errorLoadingCatalog = "Error loading catalog:"
+        static let emptyCourseCatalog = "The course catalog is empty. Please load the courses first."
+        static let invalidCourseNumber = "Invalid course number."
+        static let availableCourses = "Available courses:"
+        static let enterCourseNumber = "What course do you want to know about? "
+        static let courseNotFound = "Course not found."
+        static let prerequisites = "Prerequisites: "
+        static let noPrerequisites = "None"
     }
 }
 

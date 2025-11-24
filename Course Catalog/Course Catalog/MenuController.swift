@@ -10,7 +10,6 @@ import Foundation
 public struct MenuController {
     private let catalogManager: CatalogManager
     
-    
     /// Creates a new menu controller.
     ///
     /// - Parameter catalogManager: The `CatalogManager` used to load and query course
@@ -19,7 +18,6 @@ public struct MenuController {
         self.catalogManager = catalogManager
     }
     
-    
     /// Displays the command-line menu to the user with the available `MenuOption`s
     public func displayMenu() {
         print("")
@@ -27,7 +25,6 @@ public struct MenuController {
         print("")
         print(Strings.Menu.selectOption, terminator: "")
     }
-    
     
     /// Handles the selected menu option.
     ///
@@ -44,20 +41,13 @@ public struct MenuController {
         
         switch selectedOption {
         case .loadData:
-            do {
-                let numberOfCourses = try catalogManager.loadCourses(from: "CourseCatalog.csv")
-                print("Loaded \(numberOfCourses) courses")
-            } catch {
-                print("Error loading catalog: \(error)")
-            }
+            handleLoadData()
             return true
         case .printCourseList:
-            // TODO: Implement course list output once the binary search tree is added
-            print("You chose print course list")
+            handlePrintCourseList()
             return true
         case .printCourse:
-            // TODO: Implement course lookup and print output once the binary search tree is added
-            print("You chose print course")
+            handlePrintCourse()
             return true
         case .exit:
             print(Strings.goodbyeMessage)
@@ -66,19 +56,76 @@ public struct MenuController {
     }
 }
 
-//MARK: - MenuOption
+// MARK: Menu Actions
 
 extension MenuController {
     
+    /// Loads the data from the CourseCatalog.csv file and
+    /// prints confirmation the data has loaded or an error
+    /// if an issue was encountered.
+    private func handleLoadData() {
+        do {
+            let numberOfCourses = try catalogManager.loadCourses(from: "CourseCatalog.csv")
+            print("\(Strings.Menu.numberOfCoursesLoaded) \(numberOfCourses)")
+        } catch {
+            print("\(Strings.Menu.errorLoadingCatalog) \(error)")
+        }
+    }
+    
+    /// Prints the list of courses from the catalog
+    private func handlePrintCourseList() {
+        // make sure there are courses available to print
+        guard !catalogManager.isEmpty else {
+            print(Strings.Menu.emptyCourseCatalog)
+            return
+        }
+        
+        print(Strings.Menu.availableCourses)
+        
+        catalogManager.traverseCourses(andPerform: {
+            print($0.shortDescription)
+        })
+        
+        print("")
+    }
+    
+    /// Asks the user to input a course number and prints the
+    /// full course description.
+    private func handlePrintCourse() {
+        // make sure there are courses loaded in the catalog
+        guard !catalogManager.isEmpty else {
+            print(Strings.Menu.emptyCourseCatalog)
+            return
+        }
+        
+        print("\(Strings.Menu.enterCourseNumber)", terminator: "")
+        
+        guard let input = readLine()?.uppercased(), !input.isEmpty else {
+            print(Strings.Menu.invalidCourseNumber)
+            return
+        }
+        
+        guard let course = catalogManager.searchCourse(by: input) else {
+            print(Strings.Menu.courseNotFound)
+            return
+        }
+        
+        print("\n\(course.fullDescription)")
+        print("")
+    }
+}
+
+// MARK: - MenuOption
+
+extension MenuController {
     /// Represents an available menu option for the program.
     ///
     /// The raw integer value corresponds to the expected input from the user.
-    fileprivate enum MenuOption: Int, CaseIterable, CustomStringConvertible {
+    private enum MenuOption: Int, CaseIterable, CustomStringConvertible {
         case loadData = 1
         case printCourseList
         case printCourse
         case exit = 9
-        
         
         /// A formatted description of the option, suitable for display in the menu
         var description: String {
