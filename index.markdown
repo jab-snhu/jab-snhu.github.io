@@ -2,13 +2,6 @@
 layout: home
 ---
 
-## Artifacts
-
-- **Course Catalog CLI** – [Original (C++)](https://github.com/jab-snhu/jab-snhu.github.io/tree/main/CS300%20-%20Final%20Project) \| [Enhanced (Swift)](https://github.com/jab-snhu/jab-snhu.github.io/tree/main/Course%20Catalog)
-- **Event Tracker Android App** – [Original](https://github.com/jab-snhu/jab-snhu.github.io/tree/main/CS360%20-%20Final%20Project) \| [Enhanced](https://github.com/jab-snhu/jab-snhu.github.io/tree/main/Event%20Tracker)
-
----
-
 ## Professional Self-Assessment
 
 I began working in software development over 15 years ago as a freelance programmer. My freelance work turned into a job at a startup, which ultimately led to employment for larger scale companies including The Walt Disney Company, where I currently manage a team of mobile developers. After years of self-learning, I decided to formalize my education by completing the Computer Science program at Southern New Hampshire University, where I sought to expand my practical knowledge with a deeper understanding of the theoretical principles of programming. The coursework challenged me to consider algorithm design, software architecture, and security in new ways, directly impacting the quality of the products I help build on a daily basis.
