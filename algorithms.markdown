@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: default
 title: Algorithms and Data Structures
 permalink: /algorithms/
 ---
+
+# Algorithms and Data Structures
 
 ## Course Catalog CLI Program – C++ to Swift
 

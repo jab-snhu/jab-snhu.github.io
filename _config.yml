@@ -1,5 +1,5 @@
 # Site settings
-title: J. Blagg - CS Portfolio - SNHU
+title: Jeff Blagg - CS Portfolio - SNHU
 email: jeffrey.blagg@snhu.edu
 description: >-
   SNHU CS 499 - Computer Science Capstone ePortfolio
@@ -11,10 +11,3 @@ url: "https://jab-snhu.github.io"
 theme: minima
 plugins:
   - jekyll-feed
-
-# Navigation links in header
-header_pages:
-  - code-review.markdown
-  - software-design.markdown
-  - algorithms.markdown
-  - databases.markdown

@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: default
 title: Software Design and Engineering
 permalink: /software-design/
 ---
+
+# Software Design and Engineering
 
 For the Software Design and Engineering category of the Capstone, I enhanced two different artifacts. They are discussed individually below.
 

@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: default
 title: Code Review
 permalink: /code-review/
 ---
+
+# Code Review
 
 The code review video below presents the original artifacts before enhancement, analyzes areas for improvement, and explains the planned enhancements for each of the three capstone categories: Software Design and Engineering, Algorithms and Data Structures, and Databases.
 

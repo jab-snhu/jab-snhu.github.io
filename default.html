@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background-color: #f8f9fa;
+      border-right: 1px solid #e0e0e0;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #007bff;
+    }
+    
+    .sidebar-nav ul {
+      list-style: none;
+    }
+    
+    .sidebar-nav > ul > li {
+      margin-bottom: 8px;
+    }
+    
+    .sidebar-nav a {
+      color: #555;
+      text-decoration: none;
+      display: block;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .sidebar-nav a:hover {
+      background-color: #e9ecef;
+      color: #007bff;
+    }
+    
+    .sidebar-nav a.active {
+      background-color: #007bff;
+      color: white;
+    }
+    
+    .nav-section-title {
+      font-weight: 600;
+      color: #333;
+      padding: 6px 10px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .nav-subsection {
+      margin-left: 15px;
+      border-left: 2px solid #e0e0e0;
+      padding-left: 10px;
+    }
+    
+    .nav-subsection li {
+      margin-bottom: 4px;
+    }
+    
+    .nav-subsection a {
+      font-size: 0.9rem;
+      padding: 4px 10px;
+    }
+    
+    /* Main content */
+    .main-content {
+      margin-left: 280px;
+      flex: 1;
+      padding: 40px 60px;
+      max-width: 900px;
+    }
+    
+    .main-content h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #222;
+    }
+    
+    .main-content h2 {
+      font-size: 1.5rem;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      color: #333;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 8px;
+    }
+    
+    .main-content h3 {
+      font-size: 1.2rem;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      color: #444;
+    }
+    
+    .main-content p {
+      margin-bottom: 15px;
+    }
+    
+    .main-content a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    
+    .main-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .main-content ul, .main-content ol {
+      margin-bottom: 15px;
+      margin-left: 25px;
+    }
+    
+    .main-content li {
+      margin-bottom: 5px;
+    }
+    
+    .main-content code {
+      background-color: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.9em;
+    }
+    
+    .main-content hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 40px 0;
+    }
+    
+    .main-content strong {
+      color: #222;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      
+      body {
+        flex-direction: column;
+      }
+      
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-title">{{ site.title }}</div>
+    <div class="sidebar-nav">
+      <ul>
+        <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Professional Self-Assessment</a></li>
+        <li><a href="{{ '/code-review/' | relative_url }}" {% if page.url == '/code-review/' %}class="active"{% endif %}>Code Review</a></li>
+        
+        <li class="nav-section-title">Narratives</li>
+        <ul class="nav-subsection">
+          <li><a href="{{ '/software-design/' | relative_url }}" {% if page.url == '/software-design/' %}class="active"{% endif %}>Software Design and Engineering</a></li>
+          <li><a href="{{ '/algorithms/' | relative_url }}" {% if page.url == '/algorithms/' %}class="active"{% endif %}>Algorithms and Data Structures</a></li>
+          <li><a href="{{ '/databases/' | relative_url }}" {% if page.url == '/databases/' %}class="active"{% endif %}>Databases</a></li>
+        </ul>
+        
+        <li class="nav-section-title">Artifacts</li>
+        <ul class="nav-subsection">
+          <li><a href="https://github.com/jab-snhu/jab-snhu.github.io/tree/main/CS300%20-%20Final%20Project" target="_blank">Course Catalog (Original)</a></li>
+          <li><a href="https://github.com/jab-snhu/jab-snhu.github.io/tree/main/Course%20Catalog" target="_blank">Course Catalog (Enhanced)</a></li>
+          <li><a href="https://github.com/jab-snhu/jab-snhu.github.io/tree/main/CS360%20-%20Final%20Project" target="_blank">Event Tracker (Original)</a></li>
+          <li><a href="https://github.com/jab-snhu/jab-snhu.github.io/tree/main/Event%20Tracker" target="_blank">Event Tracker (Enhanced)</a></li>
+        </ul>
+      </ul>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    {{ content }}
+  </main>
+</body>
+</html>

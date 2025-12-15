@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: default
 title: Databases
 permalink: /databases/
 ---
+
+# Databases
 
 ## Event Tracker Android App – Cloud Database Migration
 
