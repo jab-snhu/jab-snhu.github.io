@@ -31,12 +31,42 @@
     }
     
     .sidebar-title {
-      font-size: 1.1rem;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #007bff;
+    }
+    
+    .sidebar-title .name {
+      font-size: 1.2rem;
       font-weight: 600;
       color: #333;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #007bff;
+      display: block;
+    }
+    
+    .sidebar-title .subtitle {
+      font-size: 0.9rem;
+      color: #555;
+      display: block;
+      margin-top: 2px;
+    }
+    
+    .sidebar-title .school {
+      font-size: 0.85rem;
+      color: #666;
+      display: block;
+      margin-top: 2px;
+    }
+    
+    .sidebar-title .email {
+      font-size: 0.8rem;
+      color: #007bff;
+      display: block;
+      margin-top: 4px;
+      text-decoration: none;
+    }
+    
+    .sidebar-title .email:hover {
+      text-decoration: underline;
     }
     
     .sidebar-nav ul {
@@ -184,7 +214,12 @@
 </head>
 <body>
   <nav class="sidebar">
-    <div class="sidebar-title">{{ site.title }}</div>
+    <div class="sidebar-title">
+      <span class="name">Jeff Blagg</span>
+      <span class="subtitle">Computer Science Portfolio</span>
+      <span class="school">SNHU</span>
+      <a href="mailto:jeffrey.blagg@snhu.edu" class="email">jeffrey.blagg@snhu.edu</a>
+    </div>
     <div class="sidebar-nav">
       <ul>
         <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Professional Self-Assessment</a></li>
