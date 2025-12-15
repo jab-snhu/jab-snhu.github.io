@@ -2,7 +2,7 @@
 layout: home
 ---
 
-## Professional Self-Assessment
+# Professional Self-Assessment
 
 I began working in software development over 15 years ago as a freelance programmer. My freelance work turned into a job at a startup, which ultimately led to employment for larger scale companies including The Walt Disney Company, where I currently manage a team of mobile developers. After years of self-learning, I decided to formalize my education by completing the Computer Science program at Southern New Hampshire University, where I sought to expand my practical knowledge with a deeper understanding of the theoretical principles of programming. The coursework challenged me to consider algorithm design, software architecture, and security in new ways, directly impacting the quality of the products I help build on a daily basis.
 
